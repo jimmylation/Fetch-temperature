@@ -2,7 +2,7 @@ name: Run Python Script
 
 on:
   schedule:
-    - cron: '*/15 * * * *'  # Kör varje 15:e minut
+    - cron: '*/1 * * * *'  # Kör varje 15:e minut
   workflow_dispatch:        # Möjliggör manuell start via Actions-fliken
 
 jobs:
