@@ -12,17 +12,15 @@ if response.status_code == 200:
     print("Hämtade data från sidan.")
     soup = BeautifulSoup(response.content, 'html.parser')
     
-    sections = soup.find_all('div', class_='snotemp-container')
+    # Hitta sektionen för Lindbäcksstadion
+    lindback_section = soup.find('h3', string='Lindbäcksstadion (Vallsberget)')
+    if lindback_section:
+        # Hitta temperaturerna i den sektionen
+        temp_section = lindback_section.find_next('div', class_='snotemp-container')
 
-    # Kontrollera om vi hittar data för Lindbäcksstadion
-    found = False
-
-    for section in sections:
-        heading = section.find_previous(['h3', 'h2'])
-        if heading and 'Lindbäcksstadion' in heading.text:
-            found = True
-            snow_temp = section.find('li', class_='snotemp').text.strip()
-            air_temp = section.find('li', class_='lufttemp').text.strip()
+        if temp_section:
+            snow_temp = temp_section.find('li', class_='snotemp').text.strip()
+            air_temp = temp_section.find('li', class_='lufttemp').text.strip()
 
             temperature_data = {
                 'Lindbäcksstadion': {
@@ -46,8 +44,9 @@ if response.status_code == 200:
                 print("temperature_data.json skapad.")
             except Exception as e:
                 print(f"Fel vid skrivning till fil: {e}")
-    
-    if not found:
-        print("Hittade inte data för Lindbäcksstadion.")
+        else:
+            print("Hittade ingen temperatursektion för Lindbäcksstadion.")
+    else:
+        print("Hittade inte Lindbäcksstadion på sidan.")
 else:
     print(f"Kunde inte hämta data från sidan. Statuskod: {response.status_code}")
