@@ -6,14 +6,21 @@ import os
 url = "https://www.piteenergi.se/snotemperatur/"
 
 response = requests.get(url)
+
+# Kontrollera om förfrågan lyckades
 if response.status_code == 200:
+    print("Hämtade data från sidan.")
     soup = BeautifulSoup(response.content, 'html.parser')
     
     sections = soup.find_all('div', class_='snotemp-container')
 
+    # Kontrollera om vi hittar data för Lindbäcksstadion
+    found = False
+
     for section in sections:
         heading = section.find_previous(['h3', 'h2'])
         if heading and 'Lindbäcksstadion' in heading.text:
+            found = True
             snow_temp = section.find('li', class_='snotemp').text.strip()
             air_temp = section.find('li', class_='lufttemp').text.strip()
 
@@ -39,5 +46,8 @@ if response.status_code == 200:
                 print("temperature_data.json skapad.")
             except Exception as e:
                 print(f"Fel vid skrivning till fil: {e}")
+    
+    if not found:
+        print("Hittade inte data för Lindbäcksstadion.")
 else:
-    print("Kunde inte hämta data från sidan.")
+    print(f"Kunde inte hämta data från sidan. Statuskod: {response.status_code}")
