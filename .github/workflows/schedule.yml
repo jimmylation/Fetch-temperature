@@ -27,4 +27,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: temperature_data
-        path: temperature_data.json
+        path: ./temperature_data.json  # Specifik sökväg till JSON-filen
