@@ -21,3 +21,7 @@ jobs:
 
     - name: Run Python script
       run: python fetch_temperatures.py
+
+on:
+  push:         # Trigger när du gör en push till repo
+  workflow_dispatch:  # Trigger manuellt via Actions-fliken
