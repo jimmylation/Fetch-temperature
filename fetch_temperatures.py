@@ -12,14 +12,13 @@ try:
 
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    # Leta upp sektionen för Lindbäcksstadion (justera klasser enligt sidan)
+    # Leta upp sektionen för Lindbäcksstadion
     lindbacks_section = soup.find('div', class_='stadion-container')  # Justera om nödvändigt
     if lindbacks_section:
-        # Hämta temperaturer
-        snow_temp = lindbacks_section.find('span', class_='snow-temp').text.strip()  # Justera klasser
-        air_temp = lindbacks_section.find('span', class_='air-temp').text.strip()    # Justera klasser
+        snow_temp = lindbacks_section.find('span', class_='snow-temp').text.strip()
+        air_temp = lindbacks_section.find('span', class_='air-temp').text.strip()
 
-        # Spara datan i JSON-format
+        # Spara data i JSON-format
         data = {
             "location": "Lindbäcksstadion",
             "snow_temperature": snow_temp,
@@ -27,7 +26,10 @@ try:
         }
         with open(output_file, 'w') as file:
             json.dump(data, file)
-        print(f"Data sparat: {data}")
+
+        # Logga resultatet
+        print("Temperaturer hämtade:")
+        print(f"Snö: {snow_temp}, Luft: {air_temp}")
     else:
         print("Kunde inte hitta temperaturdata för Lindbäcksstadion.")
 except Exception as e:
