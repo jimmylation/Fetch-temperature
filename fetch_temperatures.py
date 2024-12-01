@@ -31,6 +31,13 @@ if response.status_code == 200:
                 }
             }
 
+            # Skriv ut för att säkerställa att vi hittar temperaturerna
+            print(f"Snow Temperature: {snow_temp}")
+            print(f"Air Temperature: {air_temp}")
+
+            # Skriv ut att vi skriver till filen
+            print("Skriver temperaturdata till temperature_data.json")
+
             # Spara data som JSON-fil
             with open('temperature_data.json', 'w') as json_file:
                 json.dump(temperature_data, json_file, indent=4)
