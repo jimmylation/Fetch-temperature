@@ -1,15 +1,23 @@
 name: Run Python Script
+
 on:
   schedule:
     - cron: '*/15 * * * *'  # Kör varje 15:e minut
+
 jobs:
   run-script:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-      - name: Run script
-        run: python fetch_temperatures.py
+    - name: Check out repository
+      uses: actions/checkout@v3
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    - name: Run Python script
+      run: python fetch_temperatures.py
