@@ -2,8 +2,8 @@ name: Run Python Script
 
 on:
   schedule:
-    - cron: '*/1 * * * *'  # Kör varje 15:e minut
-  workflow_dispatch:        # Möjliggör manuell start via Actions-fliken
+    - cron: '*/15 * * * *'  # Kör varje 15:e minut
+  workflow_dispatch:        # Möjliggör manuell start
 
 jobs:
   run-script:
@@ -22,3 +22,9 @@ jobs:
 
     - name: Run Python script
       run: python fetch_temperatures.py
+
+    - name: Upload temperature data
+      uses: actions/upload-artifact@v3
+      with:
+        name: temperature_data
+        path: temperature_data.json
