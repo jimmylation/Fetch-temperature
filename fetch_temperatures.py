@@ -31,8 +31,13 @@ if response.status_code == 200:
             # Kontrollera om filen redan finns
             print("Kontrollerar om temperature_data.json finns innan skrivning:", os.path.exists('temperature_data.json'))
 
-            # Skriv till fil
-            with open('temperature_data.json', 'w') as json_file:
-                json.dump(temperature_data, json_file, indent=4)
+            try:
+                # Skriv till fil
+                with open('temperature_data.json', 'w') as json_file:
+                    json.dump(temperature_data, json_file, indent=4)
 
-            print("te
+                print("temperature_data.json skapad.")
+            except Exception as e:
+                print(f"Fel vid skrivning till fil: {e}")
+else:
+    print("Kunde inte hämta data från sidan.")
