@@ -2,7 +2,7 @@ name: Run Python Script
 
 on:
   schedule:
-    - cron: '*/1 * * * *'  # Kör varje minut
+    - cron: '*/15 * * * *'  # Kör varje 15:e minut
   workflow_dispatch:        # Möjliggör manuell start
 
 jobs:
@@ -11,7 +11,7 @@ jobs:
     steps:
     - name: Check out repository
       uses: actions/checkout@v3
-      
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -22,6 +22,9 @@ jobs:
 
     - name: Run Python script
       run: python fetch_temperatures.py
+
+    - name: List files to check if temperature_data.json exists
+      run: ls -l
 
     - name: Upload temperature data
       uses: actions/upload-artifact@v3
