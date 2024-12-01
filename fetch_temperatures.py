@@ -2,35 +2,35 @@ import requests
 from bs4 import BeautifulSoup
 import json
 
-# URL till PiteEnergis temperaturdata
+# URL till sidan
 url = "https://www.piteenergi.se/snotemperatur/"
-output_file = "temperature_data.json"  # Fil där datan sparas
 
-try:
-    response = requests.get(url)
-    response.raise_for_status()  # Kontrollera att förfrågan lyckades
+# Hämta innehåll från sidan
+response = requests.get(url)
 
-    soup = BeautifulSoup(response.text, 'html.parser')
+# Om förfrågan lyckas, fortsätt bearbeta
+if response.status_code == 200:
+    soup = BeautifulSoup(response.content, 'html.parser')
+    
+    # Hitta div med information om Lindbäcksstadion
+    lindback_section = soup.find('h3', string='Lindbäcksstadion (Vallsberget)').find_next('div')
+    
+    # Hämta temperaturer
+    snow_temp = lindback_section.find('li', class_='snotemp').text.strip()
+    air_temp = lindback_section.find('li', class_='lufttemp').text.strip()
 
-    # Leta upp sektionen för Lindbäcksstadion
-    lindbacks_section = soup.find('div', class_='stadion-container')  # Justera om nödvändigt
-    if lindbacks_section:
-        snow_temp = lindbacks_section.find('span', class_='snow-temp').text.strip()
-        air_temp = lindbacks_section.find('span', class_='air-temp').text.strip()
-
-        # Spara data i JSON-format
-        data = {
-            "location": "Lindbäcksstadion",
-            "snow_temperature": snow_temp,
-            "air_temperature": air_temp
+    # Skapa en dictionary för att spara temperaturdata
+    temperature_data = {
+        'Lindbäcksstadion': {
+            'Snow Temperature': snow_temp,
+            'Air Temperature': air_temp
         }
-        with open(output_file, 'w') as file:
-            json.dump(data, file)
+    }
 
-        # Logga resultatet
-        print("Temperaturer hämtade:")
-        print(f"Snö: {snow_temp}, Luft: {air_temp}")
-    else:
-        print("Kunde inte hitta temperaturdata för Lindbäcksstadion.")
-except Exception as e:
-    print(f"Ett fel inträffade: {e}")
+    # Spara data som JSON-fil
+    with open('temperature_data.json', 'w') as json_file:
+        json.dump(temperature_data, json_file, indent=4)
+
+    print("Temperaturdata för Lindbäcksstadion sparad.")
+else:
+    print("Kunde inte hämta data från sidan.")
